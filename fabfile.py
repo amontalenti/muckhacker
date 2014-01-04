@@ -51,6 +51,7 @@ def setup_ghost_dev():
     sudo("npm install -g grunt-cli")
     with cd("~/data/apps/ghost"):
         run("grunt init")
+        run("grunt prod")
 
 def setup_supervisor():
     cuisine.package_ensure("supervisor")
