@@ -1,18 +1,23 @@
-# Muck Hacker: helping digital journalists inform the digital public
+# Muck Hacker
 
-* muck, n: something sordid or corrupt
+Muck Hacker helps digital journalists inform the digital public.
 
-* hack, n: a colloquial term for a writer or journalist
+Some definitions of related terms may be helpful:
 
-* hacker, n: an enthusiastic or skillful computer programmer, often associated with the Free Software movement
+* *muck, n:* something sordid or corrupt
 
-* hacker, n: someone who seeks and exploits weaknesses in a computer system or computer network
+* *hack, n:* a colloquial term for a writer or journalist
 
-* muck, v: to mishandle or spoil something
+* *hacker, n:* an enthusiastic or skillful computer programmer, often associated with the Free Software movement
 
-* hack, v: to cut with rough or heavy blows
+* *hacker, n:* someone who seeks and exploits weaknesses in a computer system or computer network
 
-* muckraker, n: a writer who investigates and publishes truthful reports to perform an auditing or watchdog function
+* *muck, v:* to mishandle or spoil something
 
-* muckhacker, n: a savvy digital journalist who uses technology to his or her advantage
+* *hack, v:* to cut with rough or heavy blows
 
+* *muckraker, n:* a writer who investigates and publishes truthful reports to perform an auditing or watchdog function
+
+Therefore:
+
+* *muckhacker, n:* savvy digital journalist who unearths corruption through the application of advanced technology
