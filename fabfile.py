@@ -16,6 +16,9 @@ env.use_ssh_config = True
 # look inside ~/.ssh/config for details
 env.hosts = ["muckhacker"]
 
+# project path; would like to factor out :/
+PATH = "/home/ubuntu/muckhacker" # sensitive to trailing slash
+
 @task
 def list_home():
     run("ls ~/")
@@ -29,6 +32,13 @@ def setup_aptfast():
     sudo("apt-get -q -y install axel")
     with prefix('export DEBIAN_FRONTEND=noninteractive'):
         sudo("apt-get -q -y --force-yes install apt-fast")
+
+def setup_mongodb():
+    sudo("apt-fast -q -y install mongodb-server")
+
+def setup_python():
+    cuisine.package_ensure("python2.7")
+    sudo("apt-fast -q -y install python-pip")
 
 def setup_nodejs():
     add_apt_repository('ppa:chris-lea/node.js')
@@ -73,21 +83,31 @@ def setup_supervisor():
     upload_template(filename, "/etc/supervisor/conf.d/ghost.conf", use_sudo=True)
     sudo("supervisorctl start ghost")
 
+def install_requirements():
+    cuisine.package_ensure("python-pip")
+    with cd(PATH):
+        sudo("pip install -r requirements.txt")
+
+def update_src():
+    if cuisine.dir_exists(PATH) is False:
+        parent_dir = "/".join(PATH.split("/")[:-1])
+        with cd(parent_dir): # path above dir
+            sudo("git clone https://github.com/amontalenti/muckhacker")
+    else: 
+        with cd(PATH):
+            sudo("git pull origin master")
+
 @task
 def provision():
     if cuisine.command_check("apt-fast") is False:
         setup_aptfast()
-    if cuisine.command_check("nodejs") is False or \
-       cuisine.command_check("npm") is False:
-       setup_nodejs()
-    cuisine.package_ensure("git")
-    #if not cuisine.dir_exists("~/data/apps/ghost"):
-    setup_ghost()
-    #if not cuisine.command_check("grunt"):
-    setup_ghost_dev()
-    #if not cuisine.command_check("supervisorctl"):
-    setup_supervisor()
-        
+    if cuisine.command_check("mongo") is False:
+        setup_mongodb()
+    if cuisine.command_check("pip") is False:
+        setup_python()
+    update_src()
+    install_requirements()
+
 @task
 def restart_ghost():
     sudo("supervisorctl restart ghost")

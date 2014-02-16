@@ -1,2 +1,8 @@
 Fabric
 cuisine
+flask
+Flask-PyMongo
+pymongo
+WTForms
+WTForms-JSON
+lxml
