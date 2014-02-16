@@ -84,7 +84,7 @@ def edit_post(post_id):
         mongo.db.posts.update(query, post.to_bson())
         return jsonify(**post.to_dict())
     else:
-        print form.errors
+        print form.errors #TODO
         abort(403)
 
 if __name__ == "__main__":
