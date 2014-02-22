@@ -5,3 +5,4 @@ Flask-PyMongo
 pymongo
 WTForms
 WTForms-JSON
+Flask-Login

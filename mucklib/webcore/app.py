@@ -1,19 +1,35 @@
 import json
 
-from flask import Flask
-from flask import abort, jsonify, url_for, render_template, request, Response
+from flask import Flask, Response
+from flask import abort, jsonify, url_for, render_template, request, redirect
 from flask.ext.pymongo import PyMongo
+from flask.ext.pymongo import ObjectId
+from flask.ext.login import LoginManager, login_user, login_required, current_user
 from bson.json_util import dumps
 
 import config
-from models import Post, PostEncoder
-from forms import PostEditForm
+from models import Post, User
+from forms import PostEditForm, LoginForm
 
-app = Flask(__name__, static_url_path="/static", static_folder="../../vendor")
+app = Flask(__name__, static_url_path='/static', static_folder='../../vendor')
 app.config.from_object(config)
 
 mongo = PyMongo(app)
 
+login_manager = LoginManager()
+login_manager.setup_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(_id):
+    """Flask-login hook into mongo"""
+    r_dict = mongo.db.users.find_one(ObjectId(_id))
+    if r_dict is None:
+        return None
+    user = User(r_dict['username'], 
+                r_dict['password'],
+                r_dict['_id'])
+    return user
 
 @app.route('/')
 def home():
@@ -21,10 +37,31 @@ def home():
     posts = [Post(bson=d) for d in mongo.db.posts.find()]
     return render_template('home.html', posts=posts)
 
+@app.route('/admin/')
+@login_required
+def admin():
+    return Response("You are logged in brotha! %s" % str(current_user))
+
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+    form = LoginForm(request.form)
+    error = None
+    if request.method == 'POST' and form.validate():
+        uname = form.username.data
+        pw = form.password.data
+        user, authenticated = User.authenticate(mongo.db, uname, pw)
+        if authenticated:
+            login_user(user)
+            print user
+            return redirect(url_for('home'))
+        else:
+            error = 'Incorrect username or password.'
+    return render_template('login.html', form=form, error=error)
+
 @app.route('/edit/<ObjectId:post_id>/')
+@login_required
 def show_editor(post_id):
-    query = {'_id' : post_id}
-    d = mongo.db.posts.find_one(query)
+    d = mongo.db.posts.find_one(post_id)
     post = Post(bson=d)
     form = PostEditForm()
     return render_template('posts/edit.html', post=post, form=form)
@@ -40,18 +77,19 @@ def api_root():
 @app.route('/api/meta/')
 def meta():
     """Meta information about the api itself"""
-    return jsonify(version=config.API_VERSION)
+    return jsonify(version=config.API_VERSION, author="nskelsey")
 
 @app.route('/api/posts/')
 def all_posts():
     """Returns potentially paginated list of posts in 'list' attr"""
     cursor = mongo.db.posts.find().limit(10)
     posts = map(lambda bs: Post(bson=bs), cursor)
-    out_json = json.dumps({'list' : posts}, cls=PostEncoder, indent=2)
+    out_json = json.dumps({'list' : posts}, indent=2)
     resp = Response(out_json, mimetype='application/json')
     return resp
 
 @app.route('/api/posts/', methods=['POST'])
+@login_required
 def create_post():
     """Creates a new post with a new id"""
     if not request.json: # or not validate(request.json):
@@ -64,16 +102,17 @@ def create_post():
 @app.route('/api/posts/<ObjectId:post_id>/')
 def single_post(post_id):
     """Returns everything in a post as json"""
-    post_d = mongo.db.posts.find_one({'_id': post_id})
-    post = Post(bson=post_d)
+    post_d = mongo.db.posts.find_one(post_id)
     if post_d is None:
         abort(404)
+    post = Post(bson=post_d)
     return jsonify(**post.to_dict())
 
 @app.route('/api/posts/<ObjectId:post_id>/', methods=['PUT'])
+@login_required
 def edit_post(post_id):
     """Replaces post behind id with submitted one"""
-    query = {'_id' : post_id}
+    query = {'_id': post_id}
     post_d = mongo.db.posts.find_one(query)
     if post_d is None:
         abort(404) 

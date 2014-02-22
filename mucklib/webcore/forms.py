@@ -1,6 +1,7 @@
-"""Post/Put Validation logic; named forms b/c why not"""
+# Post/Put Validation logic and some forms
 from lxml.html import clean
-from wtforms import Form, TextField, validators, ValidationError
+from wtforms import Form, TextField, PasswordField, ValidationError
+from wtforms.validators import Required, Length
 import wtforms_json
 
 wtforms_json.init()
@@ -27,6 +28,15 @@ def check_title_content(form, field):
     allowed = ["p", "em", "b", "quote"]
     return clean_html_field(allowed, field)
 
+
 class PostEditForm(Form):
-    title = TextField('title', [check_title_content, validators.Length(min=0, max=500)])
-    body = TextField('body', [check_body_content, validators.Length(min=0, max=9000)])
+    title = TextField('title', [check_title_content,
+                                Length(min=0, max=500), 
+                                Required()])
+    body = TextField('body', [check_body_content,
+                              Length(min=0, max=9000)])
+
+class LoginForm(Form):
+    username = TextField('Username', [Length(min=5, max=50),
+                                      Required()])
+    password = PasswordField('Password', [Required()])
