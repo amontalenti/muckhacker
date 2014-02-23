@@ -4,6 +4,13 @@ import json
 from flask import url_for
 from werkzeug import check_password_hash, generate_password_hash
 
+class PostEncoder(json.JSONEncoder):
+    """Custom Json encoder for our post class, calls to_dict on obj"""
+    def default(self, obj):
+        if isinstance(obj, Post):
+            return obj.to_dict()
+        return json.JSONEncoder.default(self, obj)
+
 class Post():
     """The unit of work a journalist produces."""
 

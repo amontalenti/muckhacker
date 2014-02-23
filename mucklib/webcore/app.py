@@ -1,6 +1,6 @@
-import json
+import json, os, binascii
 
-from flask import Flask, Response
+from flask import Flask, Response, session
 from flask import abort, jsonify, url_for, render_template, request, redirect
 from flask.ext.pymongo import PyMongo
 from flask.ext.pymongo import ObjectId
@@ -8,11 +8,18 @@ from flask.ext.login import LoginManager, login_user, login_required, current_us
 from bson.json_util import dumps
 
 import config
-from models import Post, User
+from models import Post, User, PostEncoder
 from forms import PostEditForm, LoginForm
 
 app = Flask(__name__, static_url_path='/static', static_folder='../../vendor')
 app.config.from_object(config)
+
+def generate_csrf_token():
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = binascii.b2a_hex(os.urandom(20))
+    return session['_csrf_token']
+
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 mongo = PyMongo(app)
 
@@ -36,6 +43,20 @@ def home():
     """The home page of your install"""
     posts = [Post(bson=d) for d in mongo.db.posts.find()]
     return render_template('home.html', posts=posts)
+
+@app.before_request
+def crsf_protect():
+    if request.method in ['POST', 'PUT']:
+        token = session.pop('_csrf_token', None)
+        if request.headers.get('Content-Type') == "application/json":
+            json = request.get_json()
+            # check for csrf in json
+            if not token or token != json.pop('_csrf_token', None):
+                abort(403)
+        else:
+            # else check in the form
+            if not token or token != request.form.get('_csrf_token'):
+                abort(403)
 
 @app.route('/admin/')
 @login_required
@@ -84,7 +105,7 @@ def all_posts():
     """Returns potentially paginated list of posts in 'list' attr"""
     cursor = mongo.db.posts.find().limit(10)
     posts = map(lambda bs: Post(bson=bs), cursor)
-    out_json = json.dumps({'list' : posts}, indent=2)
+    out_json = json.dumps({'list' : posts}, cls=PostEncoder, indent=2)
     resp = Response(out_json, mimetype='application/json')
     return resp
 

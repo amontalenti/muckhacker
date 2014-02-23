@@ -43,6 +43,8 @@
     </div>
 </div>
 
+<input id=crsf type=hidden value="{{ csrf_token() }}">
+
 <script>
     var post_editor = new MediumEditor('#ebody');
     var title_editor = new MediumEditor('#etitle', { 
@@ -57,6 +59,7 @@
 
         payload["body"] = $.trim(body);
         payload["title"] = $.trim(title);
+        payload["_csrf_token"] = $("#crsf").val();
 
         function success(d, tS, jqXhr){
             $('.alert').css({"display": "none"})
