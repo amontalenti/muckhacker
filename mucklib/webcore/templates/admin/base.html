@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{% block title %}{% endblock title %}</title>
+        <title>Muckhacker Admin</title>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" />
         <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         {% block head %}
         {% endblock head %}
-
     </head>
     <body>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <a class="navbar-brand">Admin!</a>
+            </div>
+        </nav>
         <div class="container">
             {% block main %}{% endblock main %}
         </div>

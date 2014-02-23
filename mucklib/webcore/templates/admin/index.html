@@ -1,0 +1,26 @@
+{% extends '/admin/base.html' %}
+
+{% block main %}
+{% from '/admin/macros.html' import brief_row %} 
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <input type="checkbox" name="rowtoggle" class="action-rowtoggle">     
+            </th>
+            <th>
+                &nbsp
+            </th>
+            <th>
+                <h4>Title</h4>
+            </th>
+            <th>
+                <h4>Author</h4>
+            </th>
+        </tr>
+    </thead>
+    {% for post in posts %}
+        {{ brief_row(post) }}
+    {% endfor %}
+</table>
+{% endblock main %}

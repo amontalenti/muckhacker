@@ -61,7 +61,10 @@ def crsf_protect():
 @app.route('/admin/')
 @login_required
 def admin():
-    return Response("You are logged in brotha! %s" % str(current_user))
+    posts = map(lambda d: Post(bson=d), mongo.db.posts.find().limit(10))
+    return render_template('admin/index.html', 
+                            posts=posts,
+                            user=current_user)
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
