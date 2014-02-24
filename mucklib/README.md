@@ -11,7 +11,17 @@ Python module that implements the muckhacker library, including routines for:
 * an example renderer using the CMS API
 
 
-webcore is a small webservice that does three things:
+webcore
+-------
+webcore is a small web service that does three things:
 * exposes the muckhacker api
 * hosts the inline post-editor
 * hosts the admin site
+
+####setup
+(from project root)
+
+     fab provision
+     cd mucklib/webcore
+     python models.py
+     python app.py # Dev server is now running!
