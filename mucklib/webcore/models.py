@@ -111,6 +111,8 @@ class User():
 if __name__ == "__main__":
     from pymongo import MongoClient
     db = (MongoClient())['tarsands']
+    db.posts.drop()
+    db.users.drop()
     initial = map(lambda d: Post(json=d), json.loads(open('first.json').read()))
     ret = db.posts.insert(map(lambda p: p.to_bson(), initial))
 
