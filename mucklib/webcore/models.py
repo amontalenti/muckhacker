@@ -42,7 +42,7 @@ class Post():
         clean["title"] = self.title
         clean["created"] = self.created.isoformat()
         clean["body"] = self.body
-        clean["url"] = url_for('single_post', post_id=self.id, _external=True)
+        clean["url"] = url_for('api.single_post', post_id=self.id, _external=True)
         return clean
 
     def to_bson(self):
@@ -55,7 +55,7 @@ class Post():
     @staticmethod
     def api():
         """Returns a dict that describes the class for the api """
-        url = url_for('all_posts', _external=True)
+        url = url_for('api.all_posts', _external=True)
         return { "url": url }
 
 class User(): 
@@ -119,6 +119,7 @@ if __name__ == "__main__":
     db.users.insert(owner.to_bson())
     
 
+    print ret
     print db.users.find_one()
 
     

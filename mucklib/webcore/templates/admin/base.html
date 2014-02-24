@@ -5,16 +5,23 @@
         <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" />
         <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <link href="{{ url_for('static', filename='css/admin.css') }}" rel="stylesheet" />
         {% block head %}
         {% endblock head %}
     </head>
     <body>
+        <div class="container">
         <nav class="navbar navbar-default" role="navigation">
             <div class="navbar-header">
-                <a class="navbar-brand">Admin!</a>
+                <a class="navbar-brand">Admin</a>
             </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/admin/dash">Dashboard</a></li>
+                <li class="divider"></li>
+                <li><a href="/admin/manage">Manage</a></li>
+            </ul>
+            <p class="navbar-text navbar-right">{{ current_user.username }}&nbsp</p>
         </nav>
-        <div class="container">
             {% block main %}{% endblock main %}
         </div>
     </body>

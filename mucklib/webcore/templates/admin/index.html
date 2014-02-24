@@ -2,19 +2,24 @@
 
 {% block main %}
 {% from '/admin/macros.html' import brief_row %} 
+<div class="row">
+    <div class="col-sm-1"><h4>Posts</h4></div>
+    <div class="col-sm-2">
+        <button class="btn btn-primary">Create New</button>
+    </div>
+</div>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>
+            <th class="checkbox-col">
                 <input type="checkbox" name="rowtoggle" class="action-rowtoggle">     
             </th>
-            <th>
-                &nbsp
+            <th class="icon-col">
             </th>
-            <th>
+            <th class="title-col">
                 <h4>Title</h4>
             </th>
-            <th>
+            <th class="uname-col">
                 <h4>Author</h4>
             </th>
         </tr>

@@ -7,15 +7,18 @@
     <td><input type="checkbox" name="rowid" class="action-checkbox" value={{ post._id}} >
     </td>
     <td>
-        <a class="icon" href={{ url_for('show_editor', post_id=post.id) }}>
-            <span class="glyphicon glyphicon-pencil"></span>
-        </a>
-        <form class="">
-            <span class="glyphicon glyphicon-trash"></span>
-        </form>
+        <div class="icon-container">
+            <a class="icon" href={{ url_for('show_editor', post_id=post.id) }}>
+                <span class="glyphicon glyphicon-pencil"></span>
+            </a>
+            <a class="icon" href="/delete-something">
+                <span class="glyphicon glyphicon-trash"></span>
+            </a>
+            </form>
+        </div>
     </td>
     <td>
-        <a href="{{ url_for('single_post', post_id=post.id) }}"> 
+        <a href="{{ url_for('api.single_post', post_id=post.id) }}"> 
             {{ post.title| truncate(80) }}
         </a>
     </td>

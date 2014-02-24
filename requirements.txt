@@ -6,3 +6,5 @@ pymongo
 WTForms
 WTForms-JSON
 Flask-Login
+markdown2
+bleach
