@@ -39,6 +39,7 @@ def setup_mongodb():
 def setup_python():
     cuisine.package_ensure("python2.7")
     sudo("apt-fast -q -y install python-pip")
+    sudo("apt-fast -q -y install python-dev")
 
 def setup_nodejs():
     add_apt_repository('ppa:chris-lea/node.js')
@@ -103,7 +104,7 @@ def provision():
         setup_aptfast()
     if cuisine.command_check("mongo") is False:
         setup_mongodb()
-    if cuisine.command_check("pip") is False:
+    if cuisine.command_check("python-dev") is False:
         setup_python()
     update_src()
     install_requirements()

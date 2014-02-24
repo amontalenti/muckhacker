@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<script src="{{ url_for('static', filename='ee/epiceditor.js') }}"></script>
+<link href="{{ url_for('static', filename='css/editor.css') }}" rel="stylesheet" />
+{% endblock head %}
+
+
+{% block main %}
+<div class="row">
+    <div class="col-sm-12" >
+        <input type="text" id="edit-title" value="{{ post.title }}">
+    </div>
+</div>
+<div clas="row">
+    <div id="body-split-screen">
+        <div class="col-sm-6" >
+            <div class="editable" id="edit-body" >
+            </div>
+            <div id="edit-text">{{ post.body }}</div>
+        </div>
+        <div class="col-sm-6">
+            <div id="edit-preview" class="linked-bar">
+                Loading....
+            </div> 
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-1">
+        <button id="save" type="button" class="btn btn-primary">Save</button>
+    </div>
+    <div class="col-sm-3">
+        <div class="alert alert-success" style="display: None;">Hurray! it saved!</div>
+        <div class="alert alert-danger" style="display: None;"><h4>Oh Snap!</h4> reason: </div>
+    </div>
+</div>
+
+
+<input id=csrf type=hidden value="{{ csrf_token() }}">
+
+<script>
+    var filename = "post-{{ post.id }}";
+    var content = $('#edit-text').text()
+
+    var editor = new EpicEditor({
+        container: 'edit-body',
+        file: {
+            name: filename,
+            autoSave: 100,
+            defaultContent: content,
+        },
+        button: false,
+        basePath: '{{ url_for( "static", filename="ee/") }}',
+        theme: {
+            base: 'epiceditor.css',
+            preview: 'preview-dark.css',
+            editor: 'epic-dark.css', 
+        },
+    }).load(); 
+
+    // update the preview window whenever the edit window changes
+      editor.on('update', function() {
+          $('#edit-preview').html(this.exportFile(null, 'html'))
+      }).emit('update');
+
+    // links the two scrollbars together
+    // constants for the iframe editor
+    // adapted from http://stackoverflow.com/questions/18952623/synchronized-scrolling-using-jquery
+    var eIframe = editor.getElement('editorIframe'),
+    eDoc = eIframe.contentDocument,
+    eWindow = eIframe.contentWindow,
+    $eDoc = $(eDoc),
+    $preview = $('#edit-preview'),
+    ebody = eDoc.body
+    $ebody = $(ebody);
+
+    var edit_sync = function(e) {
+        // detach listeners so we can scroll
+        $preview.off('scroll'); 
+        preview = $preview.get(0);
+        var percent = ebody.scrollTop / (ebody.scrollHeight - eWindow.scrollY);
+        preview.scrollTop = percent * (preview.scrollHeight - preview.offsetHeight);
+        setTimeout( function(){ $preview.on('scroll', preview_sync);}, 10);
+    }
+
+    var preview_sync = function(e) {
+        $(eDoc).off('scroll')
+        var preview = $preview.get(0);
+        var percent = preview.scrollTop / (preview.scrollHeight - preview.offsetHeight);
+        ebody.scrollTop = percent * (ebody.scrollHeight - eWindow.scrollY);
+        setTimeout( function(){ $eDoc.on('scroll', edit_sync);}, 10);
+    }
+
+    $eDoc.on('scroll', edit_sync);
+    $preview.on('scroll', preview_sync);
+
+    // Callback to post json to endpoint
+    $("#save").click(function(){ 
+        var body = $("#edit-body")[0].innerHTML,
+        title = $("#edit-title").val(),
+        payload = {};
+
+        payload["body"] = editor.exportFile();
+        payload["title"] = $.trim(title);
+        payload["_csrf_token"] = $("#csrf").val();
+
+        function success(d, tS, jqXhr){
+            $('.alert').clearQueue();
+            $('#edit-title').html(d.title);
+            // we just overwrite the old csrf to send 
+            $('#csrf').val(d._csrf);
+            $('.alert-success').show(200).delay(5000).hide(500);
+        };
+
+        function failure(jqXHR, e, reason){
+            $('.alert').clearQueue();
+            $('.alert-danger').show(200).delay(6000).hide(500);
+            $('.alert-danger').html("<h4>Oh snap!</h4> " + reason);
+        };
+
+        console.log(payload);
+        $.ajax({
+            type: "PUT",
+            url: "{{ url_for('api.edit_post', post_id=post.id) }}",
+            data: JSON.stringify(payload),
+            success: success,
+            error: failure,
+            dataType: "json",
+            contentType: "application/json"
+        });
+    }); 
+
+</script>
+{% endblock main %}

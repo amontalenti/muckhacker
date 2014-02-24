@@ -1,0 +1,59 @@
+{% extends '/admin/base.html' %}
+
+{% block main %}
+{% from '/admin/macros.html' import brief_row %} 
+<div class="row">
+    <div class="col-sm-1"><h4>Posts</h4></div>
+    <div class="col-sm-2">
+        <button id="new-post-btn" class="btn btn-primary">Create New</button>
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="checkbox-col">
+                <input type="checkbox" name="rowtoggle" class="action-rowtoggle">     
+            </th>
+            <th class="icon-col">
+            </th>
+            <th class="title-col">
+                <h4>Title</h4>
+            </th>
+            <th class="uname-col">
+                <h4>Author</h4>
+            </th>
+        </tr>
+    </thead>
+    {% for post in posts %}
+    {{ brief_row(post) }}
+    {% endfor %}
+</table>
+<script>
+    // attaches to table elements for functionality
+    $('#new-post-btn').click(function(){
+        var payload = {
+            body: "",
+            title: (new Date()).toString(),
+            _csrf_token: $('#csrf').val()
+        }
+
+        function success(d, tS, jqXhr) {
+            console.log(d)
+            // TODO change url structure
+            var url = "/edit/" + d.id + '/';
+            console.log(url);
+            window.location.href = url;
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.create_post') }}",
+            data: JSON.stringify(payload),
+            success: success,
+            dataType: "json",
+            contentType: "application/json"
+        });
+    });
+
+</script>
+{% endblock main %}

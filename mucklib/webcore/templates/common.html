@@ -1,9 +1,8 @@
 {% macro inline(post) %}
     <div class="post-inline">
-        <h3><a href="{{ url_for('single_post', post_id=post.id) }}">{{ post.title | safe or post.pub_date }}</a></h3>
+        <h3><a href="{{ url_for('api.single_post', post_id=post.id) }}">{{ post.title | safe or post.pub_date }}</a></h3>
         <p>
-            {{ post.body | safe }}
+            {{ render_markdown(post.body) | safe }}
         </p>
-        <a href="/edit/{{ post.id }}">Edit</a>
     </div>
 {% endmacro %}

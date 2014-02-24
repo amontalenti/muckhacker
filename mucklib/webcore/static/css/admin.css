@@ -1,0 +1,34 @@
+
+body {
+   padding-top: 4px; 
+}
+
+th.checkbox-col {
+    width: 5%;
+}
+
+th.icon-col {
+    width: 10%;
+}
+
+th.title-col {
+    width: 70%;
+}
+
+th.uname-col {
+    width: 15%;
+}
+
+td > .icon-container > form > span {
+   display: inline; 
+}
+
+td > .icon-container > a {
+    display: inline;
+    float: left;
+    padding-right: 5px;
+}
+
+a.icon {
+    color: #555;
+}
