@@ -21,7 +21,10 @@ webcore is a small web service that does three things:
 ####setup
 (from project root)
 
-     fab provision
-     cd mucklib/webcore
+     fab provision:host=[somemachine-somewhere]
+
+(on the box you just configured)
+
+     cd ~/muckhacker/mucklib/webcore
      python models.py
      python app.py # Dev server is now running!
