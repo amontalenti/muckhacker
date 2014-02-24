@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-sm-1"><h4>Posts</h4></div>
     <div class="col-sm-2">
-        <button class="btn btn-primary">Create New</button>
+        <button id="new-post-btn" class="btn btn-primary">Create New</button>
     </div>
 </div>
 <table class="table table-striped">
@@ -25,7 +25,35 @@
         </tr>
     </thead>
     {% for post in posts %}
-        {{ brief_row(post) }}
+    {{ brief_row(post) }}
     {% endfor %}
 </table>
+<script>
+    // attaches to table elements for functionality
+    $('#new-post-btn').click(function(){
+        var payload = {
+            body: "",
+            title: (new Date()).toString(),
+            _csrf_token: $('#csrf').val()
+        }
+
+        function success(d, tS, jqXhr) {
+            console.log(d)
+            // TODO change url structure
+            var url = "/edit/" + d.id + '/';
+            console.log(url);
+            window.location.href = url;
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.create_post') }}",
+            data: JSON.stringify(payload),
+            success: success,
+            dataType: "json",
+            contentType: "application/json"
+        });
+    });
+
+</script>
 {% endblock main %}

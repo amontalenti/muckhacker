@@ -43,6 +43,7 @@ class Post():
         clean["created"] = self.created.isoformat()
         clean["body"] = self.body
         clean["url"] = url_for('api.single_post', post_id=self.id, _external=True)
+        clean["id"] = self.id
         return clean
 
     def to_bson(self):
@@ -84,7 +85,7 @@ class User():
     def authenticate(cls, db, username, password):
         rdict = db.users.find_one({'username': username})
         if rdict is None:
-            return False
+            return None, False
         user = User(rdict['username'],
                     rdict['password'],
                     rdict['_id'])

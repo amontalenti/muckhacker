@@ -9,7 +9,7 @@ from markdown2 import Markdown
 
 import config
 from models import Post, User
-from forms import LoginForm
+from forms import LoginForm, PostEditForm
 from utils import generate_csrf_token
 
 # flask configs/helper functions! #
@@ -70,7 +70,7 @@ def home():
 @app.route('/admin/')
 @login_required
 def admin():
-    posts = map(lambda d: Post(bson=d), mongo.db.posts.find().limit(10))
+    posts = map(lambda d: Post(bson=d), mongo.db.posts.find())
     return render_template('admin/index.html', 
                             posts=posts,
                             user=current_user)
@@ -85,8 +85,7 @@ def login():
         user, authenticated = User.authenticate(mongo.db, uname, pw)
         if authenticated:
             login_user(user)
-            print user
-            return redirect(url_for('home'))
+            return redirect(url_for('admin'))
         else:
             error = 'Incorrect username or password.'
     return render_template('login.html', form=form, error=error)

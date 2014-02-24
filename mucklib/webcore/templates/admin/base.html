@@ -16,13 +16,14 @@
                 <a class="navbar-brand">Admin</a>
             </div>
             <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
                 <li><a href="/admin/dash">Dashboard</a></li>
-                <li class="divider"></li>
                 <li><a href="/admin/manage">Manage</a></li>
             </ul>
             <p class="navbar-text navbar-right">{{ current_user.username }}&nbsp</p>
         </nav>
             {% block main %}{% endblock main %}
         </div>
+        <input type=hidden id=csrf value="{{ csrf_token() }}" >
     </body>
 </html>

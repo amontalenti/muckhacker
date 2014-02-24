@@ -16,8 +16,8 @@
     <div id="body-split-screen">
         <div class="col-sm-6" >
             <div class="editable" id="edit-body" >
-                {{ post.body }}
             </div>
+            <div id="edit-text">{{ post.body }}</div>
         </div>
         <div class="col-sm-6">
             <div id="edit-preview" class="linked-bar">
@@ -41,13 +41,14 @@
 
 <script>
     var filename = "post-{{ post.id }}";
+    var content = $('#edit-text').text()
 
     var editor = new EpicEditor({
         container: 'edit-body',
         file: {
             name: filename,
             autoSave: 100,
-            content: '',
+            defaultContent: content,
         },
         button: false,
         basePath: '{{ url_for( "static", filename="ee/") }}',
@@ -59,9 +60,9 @@
     }).load(); 
 
     // update the preview window whenever the edit window changes
-    editor.on('update', function() {
-        $('#edit-preview').html(this.exportFile(null, 'html'))
-    }).emit('update');
+      editor.on('update', function() {
+          $('#edit-preview').html(this.exportFile(null, 'html'))
+      }).emit('update');
 
     // links the two scrollbars together
     // constants for the iframe editor
@@ -94,7 +95,7 @@
     $eDoc.on('scroll', edit_sync);
     $preview.on('scroll', preview_sync);
 
-    // Callback to make a post as json
+    // Callback to post json to endpoint
     $("#save").click(function(){ 
         var body = $("#edit-body")[0].innerHTML,
         title = $("#edit-title").val(),

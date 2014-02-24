@@ -17,6 +17,10 @@ body {
     height: 400px;
 }
 
+#edit-text{
+    display: none;
+}
+
 #edit-preview {
     height: 400px;
     overflow-y: auto;

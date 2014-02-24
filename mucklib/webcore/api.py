@@ -44,7 +44,7 @@ def create_post():
     """Creates a new post with a new id"""
     if not request.json:
         abort(400)
-    form = PostForm.from_json(request.json, skip_unkown_keys=False)
+    form = PostEditForm.from_json(request.json, skip_unkown_keys=False)
     if form.validate():
         post = Post(json=form.data)
         objId = mongo.db.posts.insert(post.to_bson())
@@ -66,14 +66,14 @@ def single_post(post_id):
 @login_required
 def edit_post(post_id):
     """Replaces post behind id with submitted one"""
-    query = {'_id': post_id}
-    post_d = mongo.db.posts.find_one(query)
+    post_d = mongo.db.posts.find_one(post_id)
     if post_d is None:
         abort(404) 
     form = PostEditForm.from_json(request.json, skip_unknown_keys=False)
     if form.validate():
         post = Post(bson=post_d)
         post.update(form.data)
+        query = {'_id': post_id}
         mongo.db.posts.update(query, post.to_bson())
         # needed for chaining multiple edits together
         token = generate_csrf_token()
@@ -83,6 +83,13 @@ def edit_post(post_id):
         abort(400)
 
 
-@api.route('/delete', methods=['DELETE'])
-def delete_post():
-    return "yay"
+# no csrf protection here
+@api.route('/delete/<ObjectId:post_id>', methods=['DELETE'])
+@login_required
+def delete_post(post_id):
+    post_d = mongo.db.posts.find_one(post_id)
+    if post_d is None:
+        abort(404)
+    # in future must check that the user is the owner of the post
+    mongo.db.posts.remove(post_id)
+    return jsonify(success=True)
