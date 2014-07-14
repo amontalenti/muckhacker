@@ -1,0 +1,9 @@
+{% extends "layout/home.jinja2.html" %}
+
+{% block content %}
+    <h2>All pages</h2>
+    {% with pages=pages  %}
+        {% include "partials/list.jinja2.html" %}
+    {% endwith %}
+
+{% endblock content %}

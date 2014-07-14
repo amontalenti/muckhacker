@@ -1,0 +1,9 @@
+{
+  "name": "XXX-your-divshot-app-name-XXX",
+  "root": "./build",
+  "clean_urls": true,
+  "cache_control": {},
+  "routes": {
+    "**": "index.html"
+  }
+}

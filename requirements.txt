@@ -1,0 +1,19 @@
+# web framework:
+Flask==0.10.1
+
+# static gen:
+Frozen-Flask==0.11
+# LESS support:
+Flask-Assets==0.9
+# Markdown and YAML
+Markdown==2.4.1
+PyYAML==3.11
+Pygments==1.6
+# management scripts:
+Flask-Script==2.0.5
+
+# deployment:
+fabric==1.9.0
+# reloading:
+livereload==2.2.0
+formic==0.9beta8

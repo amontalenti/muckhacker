@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="3Q4RUdxNtl00IH3DHst2duQXhPZ4WHRBQwePrILtV6Q" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Parse.ly{% endblock title %}</title>
+
+    {% block favicon -%}
+        <link rel="shortcut icon" href="/media/img/favicon.ico">
+    {%- endblock favicon %}
+
+    {% block meta_tags %}
+        <meta name="description" content="">
+        <meta name="author" content="">
+    {%- endblock meta_tags %}
+
+
+    {% assets "css_lib" %}
+        <link href="{{ ASSET_URL }}" rel="stylesheet">
+    {%- endassets %}
+
+    {% assets "css_all" %}
+        <link href="{{ ASSET_URL }}" rel="stylesheet">
+    {%- endassets %}
+
+    {% block custom_css %}{% endblock custom_css -%}
+
+    {% block typekit %}
+        <script type="text/javascript" src="//use.typekit.net/pzp2dul.js"></script>
+        <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    {% endblock typekit %}
+</head>
+
+<body>
+    <div id="wrap">
+        <div class="container-fluid" id="main-cont">
+            {% block content %}{% endblock content %}
+        </div>
+    </div>
+
+    {% assets "js_lib" %}
+        <script src="{{ ASSET_URL }}"></script>
+    {%- endassets %}
+
+    {% assets "js_all" %}
+        <script src="{{ ASSET_URL }}"></script>
+    {%- endassets %}
+
+    {% block custom_js %}{% endblock custom_js -%}
+
+</body>
+</html>

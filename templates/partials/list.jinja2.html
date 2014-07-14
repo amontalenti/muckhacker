@@ -1,0 +1,29 @@
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <td>Page</td>
+            <td>Tags</td>
+        </tr>
+    </thead>
+    <tbody>
+{% for page in pages %}
+        <tr>
+            <td>
+                <a href="{{ url_for("page", path=page.path) }}">{{ page.title }}</a>
+            </td>
+            <td>
+        {% if page.meta.tags|length %}
+            {% for page_tag in page.meta.tags %}
+                <a href="{{ url_for("tag", tag=page_tag) }}">{{ page_tag }}</a><br />
+            {% endfor %}
+        {% endif %}
+            </td>
+        </tr>
+{% else %}
+        <tr>
+            <td>None</td>
+            <td></td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
