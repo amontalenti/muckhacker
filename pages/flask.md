@@ -20,12 +20,12 @@ The layout of the local repository on your machine is straightforward. I'll walk
 To get this project locally, you just need to clone it from Github into your `~/repos` directory:
 
     cd ~/repos
-    git clone git@github.com:Parsely/web.git web
-    cd web
+    git clone git@github.com:amontalenti/muckhacker.git web
+    cd muckhacker
 
 Then, you need to set up a `virtualenv` for the project and install its requirements:
 
-    mkvirtualenv web
+    mkvirtualenv muckhacker
     pip install -r requirements.txt
 
 Finally, you need to install two dependencies via `npm`, the Node.JS package manager. These handle LESS -> CSS compilation (`lessc`) and CSS minification (`clean-css`):
@@ -65,22 +65,6 @@ This runs a modified version of the Flask server that has built-in support for t
 
 ## Deployment
 
-### Automated Builds with Travis-CI
-
-This project is automatically built using Travis-CI, our Continuous Integration tool. You can [monitor its build history][travis-builds] in the panel.
-
-Upon every successful build of Travis-CI, the current build is also automatically deployed to [divshot][divshot]. This service provides dead-simple static website hosting with a clever versioning scheme. Our Travis builds automatically push the latest version to [http://development.parsely.divshot.io][divshot-development]. You can log into the Divshot web panel to see past deployed revisions of the website, and also to promote websites from development to staging and production.
-
-### Deploying to Parse.ly servers
-
-In order to deploy the website, all you need to do is run:
-
-    python app.py build
-
-And then `rsync` the resultant HTML/CSS into a static website root. For our own production servers, we script this using `fab deploy_beta` and `fab deploy_prod` commands in our `fabfile.py` file, *although these are currently disabled using the rsync -n "dry-run" flag, so that we don't overwrite our production website accidentally*.
-
-To test out current "production" builds of the website, you can use `fab deploy_divshot`, which will push something that looks like a "prod-ready" version to [http://staging.parsely.divshot.io][divshot-staging].
-
 ### Deploying to divshot
 
 Speaking of divshot, if you want to deploy to it, you simply need the Node-based tooling.
@@ -91,7 +75,7 @@ Then you simply use:
 
     divshot push staging
 
-And you will be able to see your pushed changes at [http://staging.parsely.divshot.io][divshot-staging]. The `fab deploy_divshot` command simply changes some settings for production (e.g. enabling CSS minification).
+And you will be able to see your pushed changes at [http://staging.yourapp.divshot.io][divshot-staging]. The `fab deploy_divshot` command simply changes some settings for production (e.g. enabling CSS minification).
 
 ## Content Management
 
@@ -169,14 +153,13 @@ Obviously, minification makes things difficult to debug, which is why this is on
 [local-5000-flask]: http://localhost:5000/pages/flask/
 [livereload]: http://livereload.readthedocs.org/en/latest/
 [livereload-ext]: http://feedback.livereload.com/knowledgebase/articles/86242
-[travis-builds]: https://magnum.travis-ci.com/Parsely/web/builds
 [divshot]: http://divshot.com
-[divshot-development]: http://development.parsely.divshot.io
-[divshot-staging]: http://staging.parsely.divshot.io
+[divshot-development]: http://development.yourapp.divshot.io
+[divshot-staging]: http://staging.yourapp.divshot.io
 [local-5000-list]: http://localhost:5000/list
 [yaml-frontmatter]: http://jekyllrb.com/docs/frontmatter/
-[github-editor]: https://github.com/Parsely/web/tree/master/pages
-[prose-io]: http://prose.io/#Parsely/web/tree/master/pages
+[github-editor]: https://github.com/amontalenti/muckhacker/tree/master/pages
+[prose-io]: http://prose.io/
 [jinja2]: http://jinja.pocoo.org/
 [jinja2-designer]: http://jinja.pocoo.org/docs/templates/
 [bootstrap]: http://getbootstrap.com/
