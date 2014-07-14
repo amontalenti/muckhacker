@@ -94,7 +94,7 @@ def update_src():
         parent_dir = "/".join(PATH.split("/")[:-1])
         with cd(parent_dir): # path above dir
             sudo("git clone https://github.com/amontalenti/muckhacker")
-    else: 
+    else:
         with cd(PATH):
             sudo("git pull origin master")
 
