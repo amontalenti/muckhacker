@@ -73,24 +73,24 @@ manager.add_command("assets", ManageAssets(assets))
 @app.route('/')
 def index():
     page = pages.get("index")
-    return render_template("page.jinja2.html", page=page)
+    return render_template("page.jinja", page=page)
 
 
 @app.route('/list/')
 def list():
-    return render_template("allpages.jinja2.html", pages=pages)
+    return render_template("allpages.jinja", pages=pages)
 
 
 @app.route('/pages/<path:path>/')
 def page(path):
     page = pages.get_or_404(path)
-    return render_template('page.jinja2.html', page=page)
+    return render_template('page.jinja', page=page)
 
 
 @app.route('/tag/<string:tag>/')
 def tag(tag):
     tagged = [p for p in pages if tag in p.meta.get('tags', [])]
-    return render_template('alltags.jinja2.html', pages=tagged, tag=tag)
+    return render_template('alltags.jinja', pages=tagged, tag=tag)
 
 
 #
