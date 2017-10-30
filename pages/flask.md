@@ -67,6 +67,8 @@ This runs a modified version of the Flask server that has built-in support for t
 
 ### Deploying to divshot
 
+**NOTE: divshot is out of business, probably need to switch to something like netlify.com now.**
+
 Speaking of divshot, if you want to deploy to it, you simply need the Node-based tooling.
 
     sudo npm install -g divshot
